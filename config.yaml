@@ -1,0 +1,78 @@
+# ============================================================
+# Sponsor Şirket Arama Otomasyonu — Ayarlar
+# ============================================================
+# Bu dosyayı düzenleyerek arama kriterlerini değiştirebilirsin.
+
+countries: [NL, UK, CH, LU]
+
+profiles:
+  ozer:
+    full_name: "Özer İpek"
+    email: "ozeripek84@gmail.com"
+    phone: "+90 505 443 35 74"
+    headline: "Data Scientist | ML Engineer | AI & Operations Analyst"
+    keywords:
+      - data scientist
+      - data science
+      - machine learning
+      - ml engineer
+      - ai engineer
+      - artificial intelligence
+      - data engineer
+      - mlops
+      - computer vision
+      - nlp
+      - deep learning
+      - llm
+      - generative ai
+      - genai
+      - analytics engineer
+    exclude_keywords:      # başlıkta bunlar varsa eleme
+      - intern
+      - internship
+      - stage
+      - werkstudent
+      - phd
+
+  kateryna:
+    full_name: "Kateryna Ipek"
+    email: "kateryna.solovkina@gmail.com"
+    phone: "+90 552 514 32 74"
+    headline: "Data & Business Analyst | Risk & Performance Analytics"
+    keywords:
+      - data analyst
+      - business analyst
+      - financial analyst
+      - finance analyst
+      - risk analyst
+      - bi analyst
+      - business intelligence
+      - reporting analyst
+      - insights analyst
+      - fp&a
+      - pricing analyst
+      - credit analyst
+      - performance analyst
+    exclude_keywords:
+      - intern
+      - internship
+      - stage
+      - werkstudent
+      - phd
+
+# Ülke bazlı lokasyon eşleştirme kelimeleri (iş ilanı lokasyonunda aranır)
+locations:
+  NL: [netherlands, nederland, amsterdam, rotterdam, eindhoven, utrecht,
+       "the hague", "den haag", groningen, delft, leiden, haarlem, hilversum, veldhoven]
+  UK: ["united kingdom", london, manchester, cambridge, oxford, edinburgh,
+       glasgow, bristol, leeds, birmingham, "uk"]
+  CH: [switzerland, schweiz, suisse, zurich, zürich, geneva, genève, basel,
+       lausanne, bern, zug, lugano]
+  LU: [luxembourg, luxemburg, lëtzebuerg]
+
+# "remote" ilanları da dahil et (lokasyonu boş/remote olan ilanlar)
+include_remote: true
+
+# ATS taramasında istekler arası bekleme (saniye) — nazik davran
+request_delay: 0.15
+request_timeout: 12
