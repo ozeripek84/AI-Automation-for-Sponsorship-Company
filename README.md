@@ -26,9 +26,10 @@ open output/dashboard.html         # sonuçları gör
 ## Günlük kullanım akışı
 
 1. `python3 run.py jobs && python3 run.py letters && python3 run.py report`
-2. Dashboard'ı aç, `yeni` durumundaki ilanlara bak.
-3. İlana başvur: ilan linkine git, `output/letters/` içindeki hazır mektubu
-   yapıştır (göndermeden önce 1 dk okuyup gerekirse ufak dokunuş yap!).
+2. Dashboard'ı aç, `yeni` durumundaki ilanlara bak, ID'sini not et.
+3. `python3 run.py apply 12` — ilan tarayıcıda açılır, kapak mektubu panoya
+   kopyalanır. Yapıştır (Cmd+V), 1 dk oku, CV'yi ekle, **Gönder'e sen bas**.
+   (Kısa e-posta versiyonu için: `python3 run.py apply 12 --email`)
 4. Durumu işaretle: `python3 run.py status 12 basvuruldu`
    (durumlar: `yeni | basvuruldu | cevap_bekleniyor | mulakat | red | teklif`)
 

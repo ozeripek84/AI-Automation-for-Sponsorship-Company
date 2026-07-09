@@ -9,13 +9,16 @@ Kullanım:
   python3 run.py letters             # 'yeni' durumundaki ilanlara mektup üret
   python3 run.py report              # dashboard.html'i yeniden oluştur
   python3 run.py search "asml"       # şirket resmi sponsor mu? (NL+UK kayıtlarında ara)
+  python3 run.py apply 12            # ilanı tarayıcıda aç + mektubu panoya kopyala
   python3 run.py status 12 basvuruldu [not]   # başvuru durumu güncelle
   python3 run.py add-target "Şirket Adı" NL --careers https://... [--slug xyz]
 """
 import argparse
+import subprocess
 import sys
 
 from sponsor_hunter import registries, targets, jobs, letters, tracker, report
+from sponsor_hunter.config import LETTERS
 
 
 def cmd_update(args):
@@ -63,6 +66,37 @@ def cmd_search(args):
         print(f"  [{country}] {org} — {note}")
 
 
+def cmd_apply(args):
+    """İlanı tarayıcıda aç + mektubu panoya kopyala. Gönder tuşuna SEN basarsın."""
+    df = tracker.load()
+    rows = df[df["id"] == str(args.id)]
+    if rows.empty:
+        print(f"ID {args.id} bulunamadı. Dashboard'daki ID sütununa bak.")
+        return
+    row = rows.iloc[0]
+    letter_path = (LETTERS / row["profile"] /
+                   f"{letters._safe_filename(row['company'])}__{letters._safe_filename(row['title'])}.md")
+    if letter_path.exists():
+        text = letter_path.read_text(encoding="utf-8")
+        # Varsayılan: tam kapak mektubu (bölüm 2); --email ile kısa e-posta (bölüm 1)
+        marker = "## 1) Kısa outreach e-postası" if args.email else "## 2) Tam kapak mektubu"
+        section = text.split(marker, 1)[-1]
+        section = section.split("---\n\n## 2)", 1)[0].strip()
+        section = section.replace("**", "")  # form alanları düz metin ister
+        subprocess.run(["pbcopy"], input=section.encode("utf-8"), check=False)
+        print(f"✓ {'Kısa e-posta' if args.email else 'Kapak mektubu'} panoya kopyalandı (Cmd+V ile yapıştır)")
+    else:
+        print(f"! Mektup dosyası yok ({letter_path.name}) — önce: python3 run.py letters")
+    url = row["url"] or row["careers"]
+    if url and not args.no_open:
+        subprocess.run(["open", url], check=False)
+        print(f"✓ İlan tarayıcıda açıldı: {url}")
+    print(f"\n{row['company']} — {row['title']} ({row['profile']} profili)")
+    print("Kontrol listesi: 1) Mektubu yapıştır ve 1 dk oku  2) Doğru CV'yi ekle "
+          f"({'Ozer_Ipek_CV_2026.pdf' if row['profile']=='ozer' else 'Kateryna_Ipek_CV_2026.pdf'})  3) Gönder")
+    print(f"Gönderdikten sonra: python3 run.py status {args.id} basvuruldu")
+
+
 def cmd_status(args):
     tracker.set_status(args.id, args.new_status, args.note or "")
     report.build()
@@ -94,6 +128,10 @@ def main():
     sub.add_parser("report")
     sp = sub.add_parser("search")
     sp.add_argument("name")
+    apl = sub.add_parser("apply")
+    apl.add_argument("id")
+    apl.add_argument("--email", action="store_true", help="Kapak mektubu yerine kısa e-postayı kopyala")
+    apl.add_argument("--no-open", action="store_true", help="Tarayıcıda açma, sadece kopyala")
     st = sub.add_parser("status")
     st.add_argument("id")
     st.add_argument("new_status", choices=["yeni", "basvuruldu", "cevap_bekleniyor", "mulakat", "red", "teklif"])
@@ -108,7 +146,8 @@ def main():
 
     args = p.parse_args()
     {"update": cmd_update, "jobs": cmd_jobs, "letters": cmd_letters, "report": cmd_report,
-     "search": cmd_search, "status": cmd_status, "add-target": cmd_add_target, "all": cmd_all}[args.cmd](args)
+     "search": cmd_search, "status": cmd_status, "apply": cmd_apply,
+     "add-target": cmd_add_target, "all": cmd_all}[args.cmd](args)
 
 
 if __name__ == "__main__":
