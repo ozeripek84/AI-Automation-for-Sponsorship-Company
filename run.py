@@ -17,7 +17,7 @@ import argparse
 import subprocess
 import sys
 
-from sponsor_hunter import registries, targets, jobs, letters, tracker, report
+from sponsor_hunter import registries, targets, jobs, letters, tracker, report, pdf_converter
 from sponsor_hunter.config import LETTERS
 
 
@@ -124,7 +124,8 @@ def main():
     sub.add_parser("update")
     jp = sub.add_parser("jobs")
     jp.add_argument("--country", help="Sadece bu ülke: NL, UK, CH, LU")
-    sub.add_parser("letters")
+    lp = sub.add_parser("letters")
+    lp.add_argument("--pdf", action="store_true", help="Mektupları PDF'ye çevir")
     sub.add_parser("report")
     sp = sub.add_parser("search")
     sp.add_argument("name")
@@ -141,12 +142,21 @@ def main():
     at.add_argument("country")
     at.add_argument("--careers", default="")
     at.add_argument("--slug")
+    cvp = sub.add_parser("convert-pdf")
+    cvp.add_argument("--all", action="store_true", help="Tüm mektupları PDF'ye çevir")
     ap = sub.add_parser("all")
     ap.add_argument("--country", help="Sadece bu ülke: NL, UK, CH, LU")
 
     args = p.parse_args()
+    def cmd_convert(args):
+        if args.all:
+            pdf_converter.convert_all_letters()
+        else:
+            print("Tüm mektupları PDF'ye çevirmek için: python3 run.py convert-pdf --all")
+
     {"update": cmd_update, "jobs": cmd_jobs, "letters": cmd_letters, "report": cmd_report,
      "search": cmd_search, "status": cmd_status, "apply": cmd_apply,
+     "convert-pdf": cmd_convert,
      "add-target": cmd_add_target, "all": cmd_all}[args.cmd](args)
 
 
