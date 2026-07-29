@@ -17,7 +17,7 @@ import argparse
 import subprocess
 import sys
 
-from sponsor_hunter import registries, targets, jobs, letters, tracker, report, pdf_converter
+from sponsor_hunter import registries, targets, jobs, letters, tracker, report, pdf_converter, resources
 from sponsor_hunter.config import LETTERS
 
 
@@ -144,6 +144,7 @@ def main():
     at.add_argument("--slug")
     cvp = sub.add_parser("convert-pdf")
     cvp.add_argument("--all", action="store_true", help="Tüm mektupları PDF'ye çevir")
+    sub.add_parser("resources")
     ap = sub.add_parser("all")
     ap.add_argument("--country", help="Sadece bu ülke: NL, UK, CH, LU")
 
@@ -156,7 +157,7 @@ def main():
 
     {"update": cmd_update, "jobs": cmd_jobs, "letters": cmd_letters, "report": cmd_report,
      "search": cmd_search, "status": cmd_status, "apply": cmd_apply,
-     "convert-pdf": cmd_convert,
+     "convert-pdf": cmd_convert, "resources": lambda a: print(resources.render()),
      "add-target": cmd_add_target, "all": cmd_all}[args.cmd](args)
 
 
