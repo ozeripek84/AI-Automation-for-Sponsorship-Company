@@ -8,10 +8,10 @@ başvurudan çok daha etkili, çünkü senin adına aktif eşleştirme yapıyorl
 # Hollanda işe alım / staffing ajansları.
 # fit: bu ailenin (Özer=DS/ML, Kateryna=analist/finans) profiline uygunluk.
 NL_RECRUITERS = [
-    {"name": "Undutchables", "url": "https://www.undutchables.nl",
-     "fit": "YÜKSEK", "note": "İngilizce/çok dilli beyaz yaka (finans, data, ofis). Kateryna için birebir; Özer için de uygun."},
-    {"name": "Abroad Experience", "url": "https://www.abroad-experience.com",
-     "fit": "YÜKSEK", "note": "Uluslararası/çok dilli işe alım (finans, ticaret, destek)."},
+    {"name": "Undutchables", "url": "https://undutchables.nl/vacancies",
+     "fit": "KATERYNA", "note": "Kayıt: undutchables.nl/signup. Çok dilli finans/ofis/müşteri rolleri (~24 canlı ilan, DS yok). Kateryna için iyi, Özer için zayıf. SOR: Türkiye'den HSM sponsorlu aday yerleştiriyor musunuz?"},
+    {"name": "Abroad Experience", "url": "https://abroad-experience.com/jobs/",
+     "fit": "KATERYNA", "note": "Açık başvuru: abroad-experience.com/job-seekers/open-application. Finans & muhasebe + IT destek. Kateryna için iyi, uzman DS/ML yok. Sponsorluğu doğrudan sor."},
     {"name": "Upforce", "url": "https://www.upforce.com/en",
      "fit": "ORTA", "note": "Uluslararası işe alım, teknik roller de var."},
     {"name": "Start People International", "url": "https://www.startpeople.nl/en/international-recruitment",
