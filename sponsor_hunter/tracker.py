@@ -17,7 +17,7 @@ TRACKER_CSV = OUTPUT / "tracker.csv"
 TRACKER_XLSX = OUTPUT / "tracker.xlsx"
 
 COLUMNS = ["id", "found_date", "profile", "company", "country", "title",
-           "location", "url", "ats", "careers", "status", "notes"]
+           "location", "url", "ats", "careers", "sponsorship", "status", "notes"]
 
 
 def load():
@@ -56,7 +56,7 @@ def merge(matches):
             "profile": m["profile"], "company": m["company"], "country": m["country"],
             "title": m["title"], "location": m.get("location", ""), "url": m.get("url", ""),
             "ats": m.get("ats", ""), "careers": m.get("careers", ""),
-            "status": "yeni", "notes": "",
+            "sponsorship": "", "status": "yeni", "notes": "",
         })
         next_id += 1
 

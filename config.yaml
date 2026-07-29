@@ -33,6 +33,20 @@ profiles:
       - stage
       - werkstudent
       - phd
+      # --- seviye filtresi: ~1 yıl deneyim için fazla kıdemli roller elenir ---
+      # (Bu rollere başvurmak hızlı red demek. Mid/junior'a odaklan.)
+      - principal
+      - staff
+      - lead        # "Lead" + "Team Lead" vb.
+      - head of
+      - director
+      - manager
+      - vp
+      - vice president
+      - chief
+      # "senior"ı bilerek ELEMEDIM — Kaggle Master + yakın deneyimle
+      # bazı senior roller stretch hedef olabilir. Çok red alırsan
+      # buraya "- senior" satırını da ekle.
 
   kateryna:
     full_name: "Kateryna Ipek"
@@ -59,6 +73,14 @@ profiles:
       - stage
       - werkstudent
       - phd
+      # Kateryna da benzer şekilde: ~1-2 yıl deneyim, aşırı kıdemli roller elensin
+      - principal
+      - head of
+      - director
+      - manager
+      - vp
+      - vice president
+      - chief
 
 # Ülke bazlı lokasyon eşleştirme kelimeleri (iş ilanı lokasyonunda aranır)
 locations:

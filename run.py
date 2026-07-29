@@ -17,7 +17,7 @@ import argparse
 import subprocess
 import sys
 
-from sponsor_hunter import registries, targets, jobs, letters, tracker, report, pdf_converter, resources
+from sponsor_hunter import registries, targets, jobs, letters, tracker, report, pdf_converter, resources, sponsorship
 from sponsor_hunter.config import LETTERS
 
 
@@ -48,6 +48,14 @@ def cmd_letters(args):
         return
     written = letters.generate(rows)
     print(f"✓ {len(written)} mektup üretildi -> output/letters/")
+
+
+def cmd_check_sponsorship(args):
+    df = tracker.load()
+    df = sponsorship.enrich(df, only_new=not args.all)
+    tracker.save(df)
+    report.build()
+    print("✓ Dashboard güncellendi — 'evet' işaretli ilanlar başa alındı.")
 
 
 def cmd_report(args):
@@ -145,6 +153,8 @@ def main():
     cvp = sub.add_parser("convert-pdf")
     cvp.add_argument("--all", action="store_true", help="Tüm mektupları PDF'ye çevir")
     sub.add_parser("resources")
+    cs = sub.add_parser("check-sponsorship")
+    cs.add_argument("--all", action="store_true", help="Sadece 'yeni' değil, tüm ilanları kontrol et")
     ap = sub.add_parser("all")
     ap.add_argument("--country", help="Sadece bu ülke: NL, UK, CH, LU")
 
@@ -158,6 +168,7 @@ def main():
     {"update": cmd_update, "jobs": cmd_jobs, "letters": cmd_letters, "report": cmd_report,
      "search": cmd_search, "status": cmd_status, "apply": cmd_apply,
      "convert-pdf": cmd_convert, "resources": lambda a: print(resources.render()),
+     "check-sponsorship": cmd_check_sponsorship,
      "add-target": cmd_add_target, "all": cmd_all}[args.cmd](args)
 
 

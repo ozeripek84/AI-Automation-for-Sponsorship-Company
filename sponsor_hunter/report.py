@@ -72,11 +72,17 @@ a:hover {{ text-decoration:underline; }}
   <select id="f-profile"><option value="">Profil: tümü</option>{profile_opts}</select>
   <select id="f-country"><option value="">Ülke: tümü</option>{country_opts}</select>
   <select id="f-status"><option value="">Durum: tümü</option>{status_opts}</select>
+  <select id="f-spon">
+    <option value="">Sponsorluk: tümü</option>
+    <option value="evet">✓ sponsorluk vaat ediyor</option>
+    <option value="belirsiz">? belirsiz</option>
+    <option value="hayır">✕ çalışma izni istiyor</option>
+  </select>
   <input type="search" id="f-search" placeholder="Şirket veya pozisyon ara...">
 </div>
 <div class="tablewrap"><table>
 <thead><tr><th>ID</th><th>Profil</th><th>Şirket</th><th>Ülke</th><th>Pozisyon</th>
-<th>Lokasyon</th><th>Durum</th><th>Bulunma</th><th>Link</th></tr></thead>
+<th>Lokasyon</th><th>Sponsorluk</th><th>Durum</th><th>Bulunma</th><th>Link</th></tr></thead>
 <tbody id="rows"></tbody></table></div>
 <div class="count" id="count"></div>
 <script>
@@ -89,25 +95,40 @@ function badge(s) {{
   const m = STATUS[s] || ['○', s, 'var(--ink-2)'];
   return `<span class="badge"><span class="dot" style="color:${{m[2]}}">${{m[0]}}</span>${{esc(m[1])}}</span>`;
 }}
+const SPON = {{
+  'evet':    ['✓', 'sponsorluk', '#0ca30c'],
+  'hayır':   ['✕', 'izin istiyor', '#d03b3b'],
+  'belirsiz':['?', 'belirsiz', 'var(--ink-2)'],
+}};
+function sponBadge(s) {{
+  const m = SPON[s]; if (!m) return '<span class="muted">—</span>';
+  return `<span class="badge"><span class="dot" style="color:${{m[2]}}">${{m[0]}}</span>${{esc(m[1])}}</span>`;
+}}
+const SPON_RANK = {{'evet':0, 'belirsiz':1, '':2, 'hayır':3}};
 function render() {{
   const p = document.getElementById('f-profile').value;
   const c = document.getElementById('f-country').value;
   const s = document.getElementById('f-status').value;
+  const sp = document.getElementById('f-spon').value;
   const q = document.getElementById('f-search').value.toLowerCase();
   const rows = DATA.filter(r =>
     (!p || r.profile===p) && (!c || r.country===c) && (!s || r.status===s) &&
+    (!sp || (r.sponsorship||'')===sp) &&
     (!q || (r.company+' '+r.title).toLowerCase().includes(q)));
+  // Sponsorluk vaat edenler en üstte
+  rows.sort((a,b) => (SPON_RANK[a.sponsorship||'']??2) - (SPON_RANK[b.sponsorship||'']??2));
   tbody.innerHTML = rows.map(r => `<tr>
     <td class="muted">${{esc(r.id)}}</td><td>${{esc(r.profile)}}</td>
     <td><strong>${{esc(r.company)}}</strong></td><td>${{esc(r.country)}}</td>
     <td>${{esc(r.title)}}</td><td class="muted">${{esc(r.location)}}</td>
+    <td>${{sponBadge(r.sponsorship||'')}}</td>
     <td>${{badge(r.status)}}</td><td class="muted">${{esc(r.found_date)}}</td>
     <td>${{r.url ? `<a href="${{esc(r.url)}}" target="_blank">ilan</a>` : ''}}
         ${{r.careers ? ` · <a href="${{esc(r.careers)}}" target="_blank">kariyer</a>` : ''}}</td>
   </tr>`).join('');
   document.getElementById('count').textContent = rows.length + ' ilan gösteriliyor';
 }}
-for (const id of ['f-profile','f-country','f-status'])
+for (const id of ['f-profile','f-country','f-status','f-spon'])
   document.getElementById(id).addEventListener('change', render);
 document.getElementById('f-search').addEventListener('input', render);
 render();
